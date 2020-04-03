@@ -27,6 +27,8 @@
 
 <script>
 
+let bikeArr=new Array("Bike.jpg","bike1.jpg","Bike2.jpg","Bike3.jpg","Bike4.jpg");
+    
     function promptButtonClicked() {     	
 	/*Prompt displays a message and returns a string depending on what the user has entered. It can be used for simple input. We stored the returned string in a variable.*/  
 	var destination=prompt("Where would you like to ride?");
@@ -67,8 +69,9 @@
     function initBody() {
 	// retrieve the changeButton element from the DOM and hide it
 	document.getElementById("changeButton").style.visibility="hidden";  	 
-}   	        
-	function changeButtonClicked(){
+}   	
+
+    function changeButtonClicked(){
         
         let pic = document.getElementById("bikeImg");
         pic.src = bikeArr[Math.floor(Math.random() * bikeArr.length)];       
