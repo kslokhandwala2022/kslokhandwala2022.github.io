@@ -68,6 +68,11 @@
 	// retrieve the changeButton element from the DOM and hide it
 	document.getElementById("changeButton").style.visibility="hidden";  	 
 }   	        
+	function changeButtonClicked(){
+        
+        let pic = document.getElementById("bikeImg");
+        pic.src = bikeArr[Math.floor(Math.random() * bikeArr.length)];       
+    }
 </script>
 
 </html>
