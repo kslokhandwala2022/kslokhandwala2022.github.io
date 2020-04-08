@@ -1,0 +1,76 @@
+<!DOCTYPE html> 
+<html>   
+<head>     
+	<meta name="apple-mobile-web-app-capable" content="yes">    
+	<meta name="apple-mobile-webapp-status-bar-style" content="black">
+	<meta name="viewport" content="width=device-width, user-scalable=no" >     <title>Register</title>     
+	<link rel="stylesheet" href="forms.css">
+	<link rel="stylesheet" href="style.css">
+</head>   
+<body> 	
+	<header class="secondary"> Sign up! </header>     
+	<button class="back" onclick="location.href='index.html';">Back</button>     
+	<div class="info">     
+		<p>Register now to take advantage of this site. </p>    
+		<form method="post" id="register" >     
+
+			<label for="name">Your Name:</label>
+<div class="error" id="name-error">Name is a required field.</div>
+<input type="text" name="name" id="name" required>
+
+	<label for="email">Email:</label>
+	<div class="error" id="email-error">Email is a required field.</div>
+	<input type="email" name="email" id="email" required>
+	<label for="dob">Date of Birth:</label>
+
+	<div class="error" id="dob-error">Date of birth is a required field.</div>
+		<input type="date" name="dob" id="dob" required>  
+		<label for="pwd">Password:</label>
+	<div class="error" id="pwd-error">Password is a required field.</div>       
+<input type="password" name="pwd" id="pwd" required>    
+
+
+			<br />       
+			<input type="submit" value="Sign up">       
+			<a href="index.html">Nevermind</a>      
+		</form>          
+	</div> 
+    <script src="stay_standalone.js"></script>  
+    <script>
+
+window.onkeydown = function(event){
+    if(document.getElementById("email").checkValidity()){
+        document.getElementById("email-error").style.visibility = "hidden"; 
+    }
+    else{
+        document.getElementById("email-error").style.visibility = "visible"; 
+    }
+
+    if(document.getElementById("pwd").checkValidity()){
+        document.getElementById("pwd-error").style.visibility = "hidden"; 
+    }
+    else{
+        document.getElementById("pwd-error").style.visibility = "visible"; 
+    }
+
+    if(document.getElementById("dob").checkValidity()){
+        document.getElementById("dob-error").style.visibility = "hidden"; 
+    }
+    else{
+        document.getElementById("dob-error").style.visibility = "visible"; 
+    }
+
+    if(document.getElementById("name").checkValidity()){
+        document.getElementById("name-error").style.visibility = "hidden"; 
+    }
+    else{
+        document.getElementById("name-error").style.visibility = "visible"; 
+    }
+    
+}
+   
+    
+
+    </script>       
+</body> 
+</html>
