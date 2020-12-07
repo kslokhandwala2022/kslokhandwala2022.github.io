@@ -1,6 +1,7 @@
 const db = firebase.firestore();
 
 let memberID;
+let memberName;
 let memberslist;
 let bandName;
 let isHost = false;
@@ -16,25 +17,43 @@ async function setID() {
 	let snapshot = await db.doc('Members/allMembers').get();
 	memberID = snapshot.data().Count;
 	console.log(`This is the member ID: ${memberID}`);
+	memberName = localStorage.getItem('user');
 
-	document.getElementById('info').innerHTML = `Member ID: ${memberID}`;
-	document.getElementById('instrument').innerHTML = `You are the ${
-		instruments[memberID % instruments.length]
-	}`;
+	document.getElementById('info').innerHTML = `Member ID: ${memberID}` + '<br>' + `Member Name: ${memberName}`;
+	document.getElementById('instrument').innerHTML = `You are the ${instruments[memberID % instruments.length]
+		}`;
 }
 
-async function displayMembers() {
+function displayMembers() {
 	//document.getElementById('allMembers').innerHTML = `Member ID: ${memberID}`;
-    let snapshot = await db.collection('Bands').doc(bandName).collection('members').get();
-    memberslist = snapshot.docs.map(doc => doc.data());
-    console.log(`Global MembersList: ${memberslist}`);
-    //console.log(`Global MembersList: ${memberslist[8]}`);
-    document.getElementById("allMembers").innerHTML = "Your Band: " + bandName + "<br>";
-    memberslist.forEach(function(item, index) {
-        // doc.data() is never undefined for query doc snapshots
-        document.getElementById("allMembers").innerHTML += index + ":" + item.userName + "<br>";
-        console.log(index, ' => ', item.userName);
-    })
+	db.doc(`Bands/${bandName}`).onSnapshot(function(doc) {
+		console.log("SnapShot activated");
+		db.collection(`Bands/${bandName}/members`).get().then( function(members){
+			let memberslist = members.docs.map(doc => doc.data());
+			//console.log(`Global MembersList: ${memberslist}`);
+			document.getElementById("allMembers").innerHTML = "Your Band: " + bandName + "<br>";
+			
+			memberslist.forEach(function (item, index) {
+				document.getElementById("allMembers").innerHTML += index + ":" + item.userName + "<br>";
+				//console.log(index, ' => ', item.userName);
+			})
+
+			db.doc(`Bands/${bandName}`).set({//if memberslist is diff from current, snapshot will not rerun
+				members: memberslist.length,
+			})
+		})
+	})
+	
+	// let snapshot = await db.collection('Bands').doc(bandName).collection('members').get();
+	// memberslist = snapshot.docs.map(doc => doc.data());
+	// console.log(`Global MembersList: ${memberslist}`);
+	// //console.log(`Global MembersList: ${memberslist[8]}`);
+	// document.getElementById("allMembers").innerHTML = "Your Band: " + bandName + "<br>";
+	// memberslist.forEach(function (item, index) {
+	// 	// doc.data() is never undefined for query doc snapshots
+	// 	document.getElementById("allMembers").innerHTML += index + ":" + item.userName + "<br>";
+	// 	console.log(index, ' => ', item.userName);
+	// })
 }
 
 async function getDoc(path) {
@@ -42,7 +61,7 @@ async function getDoc(path) {
 }
 
 function onPageLoaded() {
-    //add to count
+	//add to count
 	db.doc('Members/allMembers')
 		.get()
 		.then(querySnap => {
@@ -53,6 +72,13 @@ function onPageLoaded() {
 			});
 		});
 }
+
+function onRoomLoaded() {
+	bandName = localStorage.getItem('band');
+	setID();
+	displayMembers();
+}
+
 
 //unhide forms and close buttons
 function openForm(hostBool) {
@@ -73,9 +99,12 @@ function openForm(hostBool) {
 
 //take data and start room or error
 function enterRoom() {
+	
 	bandName = document.getElementById('band').value;
 	let userName = document.getElementById('name').value;
 	let passCode = document.getElementById('passcode').value;
+	localStorage.setItem('user', userName);
+	localStorage.setItem('band', bandName);
 	//console.log(`BandName: ${bandName}`);
 
 	// if(!isHost){
@@ -85,8 +114,8 @@ function enterRoom() {
 	//         document.getElementById("errorRoom").style.display = "block";
 	//         return;
 	//     }
-    // }
-  
+	// }
+
 
 	//make band
 	db.collection('Bands')
@@ -107,12 +136,15 @@ function enterRoom() {
 				.set({
 					userName: userName
 				})
-		);
-
-        setID();
-        displayMembers();
-        document.getElementById('bandInfo').style.display = 'none';
-        document.getElementById('mainRoom').style.display = 'block';
+		).then(() =>
+			location.href = 'room.html'
+		)
+		
+	//setID();
+	//displayMembers();
+	// document.getElementById('bandInfo').style.display = 'none';
+	
+	//document.getElementById('mainRoom').style.display = 'block';
 
 }
 
